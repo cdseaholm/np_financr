@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "755090540780",
+    "project_id": "newprogress-financr",
+    "storage_bucket": "newprogress-financr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755090540780:android:fed744308fd749bde9fdc9",
+        "android_client_info": {
+          "package_name": "com.example.np_financr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9PXtCfd5f3ixIKJNT6emnWVJhLT5wHrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

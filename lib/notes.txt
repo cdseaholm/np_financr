@@ -1,0 +1,983 @@
+Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            RepeatMultiSelect(onMultiSelectionChanged: (newSelectedDays) {
+              setState(() {
+                reimbursedItemsList = newSelectedDays;
+                reimbursedItemsNotifier.value = newSelectedDays;
+                showDaysHint = false;
+
+                ref
+                    .read(reimbursedItems.notifier)
+                    .update((state) => newSelectedDays);
+              });
+            }, onNoMultiSelection: (noSelectedDays) {
+              setState(() {
+                selectedRepeatingDaysList = [];
+                selectedDaysNotifier.value = [];
+                showDaysHint = true;
+                ref.read(reimbursedItems.notifier).update((state) => []);
+              });
+            }),
+          ]),
+
+          updater first try: 
+
+          import 'package:flutter/cupertino.dart';
+
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'package:np_financr/backend/monthly_update/updater_all/specific_updater.dart';
+
+import '../../constants/constants.dart';
+import '../../finances(main)/accounts(all)/account_providers/account_edit.dart';
+
+class UpdaterAllWidget extends StatefulHookConsumerWidget {
+  const UpdaterAllWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _UpdaterAllWidgetState();
+}
+
+class _UpdaterAllWidgetState extends ConsumerState<UpdaterAllWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Build Your Update',
+            style: AppStyle.headingTwo,
+          ),
+          const Gap(6),
+          Material(
+            child: Ink(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.black, width: .5),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () async {
+                  await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const UpdaterMethod();
+                      });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(CupertinoIcons.add),
+                      Gap(6),
+                      Text('Begin Update'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class UpdaterMethod extends ConsumerStatefulWidget {
+  const UpdaterMethod({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _UpdaterMethodState();
+}
+
+class _UpdaterMethodState extends ConsumerState<UpdaterMethod> {
+  @override
+  Widget build(BuildContext context) {
+    final flattenedList = [
+      'Accounts',
+      'Cards',
+      'Goals',
+      'Paychecks',
+      'Rules',
+      'Bills',
+    ];
+    var itemCount = 0;
+
+    return AlertDialog(
+      scrollable: true,
+      title: const Column(children: [Text('Choose What To Update')]),
+      backgroundColor: Colors.white,
+      content: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(5),
+            width: MediaQuery.of(context).size.width / 2,
+            height: MediaQuery.of(context).size.height / 3,
+            decoration: BoxDecoration(
+                border: Border.all(
+              color: Colors.black,
+            )),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (var item in flattenedList)
+                    Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            await showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  SpecificUpdaterWidget(toUpdate: item),
+                            );
+                          },
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            width: MediaQuery.of(context).size.width / 1,
+                            height: MediaQuery.of(context).size.height / 15,
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 45, 138, 99),
+                            ),
+                            child: Flex(
+                              direction: Axis.vertical,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                          elevation:
+                                              MaterialStateProperty.all(0),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.transparent,
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          await showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                SpecificUpdaterWidget(
+                                                    toUpdate: item),
+                                          );
+                                        },
+                                        child: Text(item),
+                                      ),
+                                      const Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: Colors.white,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const Gap(5),
+                      ],
+                    ),
+                  const Divider(
+                      thickness: 1,
+                      color: Colors.black,
+                      indent: 10,
+                      endIndent: 10),
+                ],
+              ),
+            ),
+          ),
+          const Gap(5),
+          if (itemCount > 3)
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Scroll for more',
+                  style: TextStyle(fontSize: 10),
+                )
+              ],
+            )
+        ],
+      ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+              child: const Column(
+                children: [
+                  Text('Clear'),
+                  Text('And Cancel'),
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  EditAccount().editAccountDialog(context, ref);
+                } finally {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Column(
+                children: [
+                  Text('Save'),
+                  Text('Updates'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+financeTry {
+
+  import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+
+import 'data/model/add_date.dart';
+import 'widgets/bottomnavigationbar.dart';
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(AdddataAdapter());
+  await Hive.openBox<AddData>('data');
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Bottom(),
+    );
+  }
+}
+
+import 'package:flutter/material.dart';
+import 'package:np_financr/backend/finance_git_trial/screens/statistics.dart';
+
+import '../screens/home.dart';
+import '../screens/add.dart';
+
+class Bottom extends StatefulWidget {
+  const Bottom({Key? key}) : super(key: key);
+
+  @override
+  State<Bottom> createState() => _BottomState();
+}
+
+class _BottomState extends State<Bottom> {
+  int indexcolor = 0;
+  List screen = [
+    const Home(),
+    const Statistics(),
+    const Home(),
+    const Statistics()
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: screen[indexcolor],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const AddScreen()));
+        },
+        backgroundColor: const Color(0xff368983),
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 7.5, bottom: 7.5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    indexcolor = 0;
+                  });
+                },
+                child: Icon(
+                  Icons.home,
+                  size: 30,
+                  color:
+                      indexcolor == 0 ? const Color(0xff368983) : Colors.grey,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    indexcolor = 1;
+                  });
+                },
+                child: Icon(
+                  Icons.bar_chart_outlined,
+                  size: 30,
+                  color:
+                      indexcolor == 1 ? const Color(0xff368983) : Colors.grey,
+                ),
+              ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    indexcolor = 2;
+                  });
+                },
+                child: Icon(
+                  Icons.account_balance_wallet_outlined,
+                  size: 30,
+                  color:
+                      indexcolor == 2 ? const Color(0xff368983) : Colors.grey,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    indexcolor = 3;
+                  });
+                },
+                child: Icon(
+                  Icons.person_outlined,
+                  size: 30,
+                  color:
+                      indexcolor == 3 ? const Color(0xff368983) : Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+}
+
+oldManager: 
+
+/* WillPopScope(
+      onWillPop: () async {
+        if (isDialOpen.value) {
+          isDialOpen.value = false;
+
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        floatingActionButton: SpeedDial(
+          openCloseDial: isDialOpen,
+          spacing: 12,
+          spaceBetweenChildren: 10,
+          overlayColor: Colors.black,
+          overlayOpacity: .4,
+          onOpen: () {
+            showToast('Opened...');
+          },
+          onClose: () {
+            showToast('Closed...');
+          },
+          icon: CupertinoIcons.add,
+          activeIcon: CupertinoIcons.xmark,
+          children: [
+            SpeedDialChild(
+              child: const Icon(Icons.rule),
+              backgroundColor: Colors.amber,
+              label: 'Add a Rule',
+              onTap: () async {
+                try {
+                  showToast;
+                } finally {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AddRuleWidget(
+                            previousPage: PreviousPage.manager);
+                      });
+                }
+              },
+            ),
+            SpeedDialChild(
+              child: const Icon(Icons.payments),
+              backgroundColor: Colors.redAccent,
+              label: 'Add a Paycheck',
+              onTap: () async {
+                try {
+                  showToast;
+                } finally {
+                  await showModalBottomSheet<void>(
+                    showDragHandle: true,
+                    isDismissible: false,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    context: context,
+                    builder: (context) => const AddNewPaycheckModel(),
+                  ).whenComplete(() => null);
+                }
+              },
+            ),
+            SpeedDialChild(
+              child: const Icon(Icons.manage_accounts),
+              backgroundColor: const Color.fromARGB(255, 38, 153, 97),
+              label: 'Add an Account',
+              onTap: () async {
+                try {
+                  showToast;
+                } finally {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const SelectAccountMethod(
+                            previousPage: PreviousPage.manager);
+                      });
+                }
+              },
+            ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+        ),
+        backgroundColor: Colors.grey.shade200,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      const Text(
+                        'Finance Manager',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      Text(
+                        DateFormat('EEEE, MMMM d').format(DateTime.now()),
+                        style: TextStyle(color: Colors.grey.shade700),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Filter By:'),
+                        Gap(1),
+                        CustomFilterButton(),
+                      ],
+                    ),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('View:'),
+                          Gap(1),
+                          MainFilterViewButton(),
+                        ])
+                  ]),
+              const Divider(
+                thickness: .6,
+                color: Colors.black,
+              ),
+              const Gap(10),
+              if (filterView.value == 'All')
+                Expanded(
+                  child: AllHomeView(
+                    accounts: accounts,
+                    cards: cards,
+                    paychecks: paychecks,
+                    rules: rules,
+                    goals: goals,
+                  ),
+                )
+              else if (filterView.value == 'Paychecks' && paychecks.isEmpty)
+                const DisplayDefaultPaycheck()
+              else if (filterView.value == 'Paychecks' && paychecks.isNotEmpty)
+                Expanded(
+                    child: ListView.builder(
+                  itemCount: paychecks.length,
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return PaycheckToolListWidget(getIndex: index);
+                  },
+                ))
+              else if (filterView.value == 'Accounts' && accounts.isEmpty)
+                const DisplayDefaultPaycheck()
+              else if (filterView.value == 'Accounts' && accounts.isNotEmpty)
+                Expanded(
+                    child: ListView.builder(
+                  itemCount: accounts.length,
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return AccountToolListWidget(getIndex: index);
+                  },
+                ))
+              else if (filterView.value == 'Cards' && cards.isEmpty)
+                const DisplayDefaultPaycheck()
+              else if (filterView.value == 'Cards' && cards.isNotEmpty)
+                Expanded(
+                    child: ListView.builder(
+                  itemCount: cards.length,
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return CardToolListWidget(getIndex: index);
+                  },
+                ))
+              else if (filterView.value == 'Rules' && rules.isEmpty)
+                const DisplayDefaultPaycheck()
+              else if (filterView.value == 'Rules' && rules.isNotEmpty)
+                Expanded(
+                    child: ListView.builder(
+                  itemCount: rules.length,
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return RuleToolListWidget(getIndex: index);
+                  },
+                ))
+            ],
+          ),
+        ),
+      ),
+    );
+
+oldHomeView: 
+
+
+  /*  
+  
+  class AllHomeView extends StatefulHookConsumerWidget {
+  final List<AccountModel> accounts;
+  final List<CardModel> cards;
+  final List<PaycheckModel> paychecks;
+  final List<RuleModel> rules;
+  final List<GoalModel> goals;
+
+  const AllHomeView({
+    Key? key,
+    required this.accounts,
+    required this.cards,
+    required this.paychecks,
+    required this.rules,
+    required this.goals,
+  }) : super(key: key);
+
+  @override
+  _AllHomeViewState createState() => _AllHomeViewState();
+}
+
+class _AllHomeViewState extends ConsumerState<AllHomeView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+  
+  with SingleTickerProviderStateMixin {
+  final List<String> tabs = <String>[
+    'Accounts',
+    'Cards',
+    'Goals',
+    'Paychecks',
+    'Rules'
+  ];
+
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: tabs.length, vsync: this);
+  }
+
+  Widget getTabWidget(int index) {
+    switch (index) {
+      case 0:
+        return const AccountSliverList();
+      case 1:
+        return const CardSliverList();
+      case 2:
+        return const GoalSliverList();
+      case 3:
+        return const PaycheckSliverList();
+      case 4:
+        return const RuleSliverList();
+      default:
+        return const AccountSliverList();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+        child: Container(
+            width: MediaQuery.of(context).size.width / 1.1,
+            height: MediaQuery.of(context).size.height / 1.93,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black38, width: 1),
+            ),
+            child: Column(children: [
+              DefaultTabController(
+                length: tabs.length,
+                child: Expanded(
+                  child: Scaffold(
+                    body: NestedScrollView(
+                      headerSliverBuilder:
+                          (BuildContext context, bool innerBoxIsScrolled) {
+                        return [
+                          SliverOverlapAbsorber(
+                            handle:
+                                NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                    context),
+                            sliver: SliverAppBar(
+                              backgroundColor: Colors.black12,
+                              toolbarHeight: 0,
+                              pinned: true,
+                              bottom: TabBar(
+                                onTap: (value) {
+                                  setState(() {
+                                    tabController.index = value;
+                                  });
+                                },
+                                controller: tabController,
+                                labelPadding: const EdgeInsets.all(0),
+                                unselectedLabelStyle:
+                                    const TextStyle(fontSize: 12),
+                                labelColor: Colors.black,
+                                tabs: tabs
+                                    .map((String name) => Tab(text: name))
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                        ];
+                      },
+                      body: TabBarView(
+                        controller: tabController,
+                        children: tabs.map((String name) {
+                          return SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                return getTabWidget(index);
+                              },
+                              childCount: 5,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ])));
+  }
+}
+
+class SummaryModel {
+  late String title;
+  late String amount;
+
+  SummaryModel({
+    required this.title,
+    required this.amount,
+  });
+
+  SummaryModel copyWith({
+    String? title,
+    String? amount,
+  }) {
+    return SummaryModel(
+      title: title ?? this.title,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  SummaryModel.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> doc)
+      : title = doc['title'],
+        amount = doc['amount'];
+
+  SummaryModel.fromJson(Map<String, dynamic> json)
+      : title = json['title'] as String,
+        amount = json['amount'] as String;
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'amount': amount,
+      };
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            ExpansionTile(
+                key: expansionTileKey,
+                onExpansionChanged: (value) {
+                  if (value) {
+                    _scrollToSelectedContent(
+                        expansionTileKey: expansionTileKey);
+                  }
+                },
+                title: const Text('Accounts Breakdown'),
+                children: [
+                  ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: accounts.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      AccountModel account = accounts[index];
+                      return NestedScrollView(headerSliverBuilder: (context, innerBoxIsScrolled) => , body: body)
+                      
+                      ListTile(
+                        title: TextButton(
+                          onPressed: () {},
+                          child: Text(account.accountTitle),
+                        ),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Transform.scale(
+                              scale: 1.5,
+                              child: Transform.translate(
+                                offset: const Offset(0, -5),
+                                child: const Text(
+                                  '\u2937',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Amount: \$${account.amount.toString()}',
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ]),
+            const Divider(
+              thickness: 1,
+              color: Colors.black,
+              indent: 10,
+              endIndent: 10,
+            ),
+            ExpansionTile(title: const Text('Cards Breakdown'), children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: cards.length,
+                itemBuilder: (BuildContext context, int index) {
+                  CardModel card = cards[index];
+                  return ListTile(
+                    title: TextButton(
+                      onPressed: () {},
+                      child: Text(card.cardTitle),
+                    ),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Transform.translate(
+                            offset: const Offset(0, -5),
+                            child: const Text(
+                              '\u2937',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Amount: \$${card.amount.toString()}',
+                          textAlign: TextAlign.end,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ]),
+            const Divider(
+              thickness: 1,
+              color: Colors.black,
+              indent: 10,
+              endIndent: 10,
+            ),
+            ExpansionTile(title: const Text('Paychecks Breakdown'), children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: paychecks.length,
+                itemBuilder: (BuildContext context, int index) {
+                  PaycheckModel paycheck = paychecks[index];
+                  return ListTile(
+                    title: TextButton(
+                      onPressed: () {},
+                      child: Text(paycheck.paycheckTitle),
+                    ),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Transform.translate(
+                            offset: const Offset(0, -5),
+                            child: const Text(
+                              '\u2937',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Amount: \$${paycheck.amount.toString()}',
+                          textAlign: TextAlign.end,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ]),
+            const Divider(
+              thickness: 1,
+              color: Colors.black,
+              indent: 10,
+              endIndent: 10,
+            ),
+            ExpansionTile(title: const Text('Rules Breakdown'), children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: rules.length,
+                itemBuilder: (BuildContext context, int index) {
+                  RuleModel rule = rules[index];
+                  final airLength = FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(userID)
+                      .collection('Rules')
+                      .doc(rule.ruleID)
+                      .collection('Accounts')
+                      .count();
+                  return ListTile(
+                    title: TextButton(
+                      onPressed: () {},
+                      child: Text(rule.ruleTitle),
+                    ),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Transform.translate(
+                            offset: const Offset(0, -5),
+                            child: const Text(
+                              '\u2937',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Amount: $airLength',
+                          textAlign: TextAlign.end,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ]),
+          ])),
+    );
+  }
+}
+
+void _scrollToSelectedContent({required GlobalKey expansionTileKey}) {
+  final keyContext = expansionTileKey.currentContext;
+  if (keyContext != null) {
+    Future.delayed(const Duration(milliseconds: 200)).then((value) {
+      Scrollable.ensureVisible(keyContext,
+          duration: const Duration(milliseconds: 200));
+    });
+  }
+}
+
+*/ 
+
+
+*/
+
+
+
+
