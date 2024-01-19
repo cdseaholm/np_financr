@@ -69,6 +69,7 @@ dependencies:
   syncfusion_flutter_charts: ^23.2.4
   hive_flutter: ^1.1.0
   gcp_secret_manager: ^0.1.4
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -94,6 +95,7 @@ flutter:
   assets:
     - assets/Images/nplogo.png
     - assets/Images/Google.png
+    - .env
 
     
   # To add assets to your application, add an assets section, like this:

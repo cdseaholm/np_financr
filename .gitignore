@@ -39,6 +39,39 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+
+/android/
+/assets/
+/ios/
+/linux/
+/macos/
+/test/
+/web/
+/windows/
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+# Local History for Visual Studio Code
+.history/
+
+# Private Node Modules
+node_modules/
+creds.js
+
+# Private Files
+*.json
+*.csv
+*.csv.gz
+*.tsv
+*.tsv.gz
+*.xlsx
+.metadata
+pubspec.lock
+*.env
+analysis_options.yaml
+

@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -43,39 +44,39 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBuLwYd_KzTZ1be7IuX67yBiCbkEBAqWD8',
-    appId: '1:755090540780:web:37c278d769617a7ee9fdc9',
-    messagingSenderId: '755090540780',
-    projectId: 'newprogress-financr',
-    authDomain: 'newprogress-financr.firebaseapp.com',
-    storageBucket: 'newprogress-financr.appspot.com',
-    measurementId: 'G-PRWRYE730E',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: '${dotenv.env["WEBAPIKEY"]}',
+    appId: '${dotenv.env["WEBAPPID"]}',
+    messagingSenderId: '${dotenv.env["MESSAGINGSENDERID"]}',
+    projectId: '${dotenv.env["PROJECTID"]}',
+    authDomain: '${dotenv.env["WEBAUTHDOMAIN"]}',
+    storageBucket: '${dotenv.env["STORAGEBUCKET"]}',
+    measurementId: '${dotenv.env["WEBMEASUREMENTID"]}',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB9PXtCfd5f3ixIKJNT6emnWVJhLT5wHrs',
-    appId: '1:755090540780:android:fed744308fd749bde9fdc9',
-    messagingSenderId: '755090540780',
-    projectId: 'newprogress-financr',
-    storageBucket: 'newprogress-financr.appspot.com',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: '${dotenv.env["ANDROIDAPIKEY"]}',
+    appId: '${dotenv.env["ANDROIDAPPID"]}',
+    messagingSenderId: '${dotenv.env["MESSAGINGSENDERID"]}',
+    projectId: '${dotenv.env["PROJECTID"]}',
+    storageBucket: '${dotenv.env["STORAGEBUCKET"]}',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAa0osZuXeqqeL7rh3ngpLv9xqrmU3Lf6Q',
-    appId: '1:755090540780:ios:dcc86933ad95847ce9fdc9',
-    messagingSenderId: '755090540780',
-    projectId: 'newprogress-financr',
-    storageBucket: 'newprogress-financr.appspot.com',
-    iosBundleId: 'com.example.npFinancr',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: '${dotenv.env["IOSAPIKEY"]}',
+    appId: '${dotenv.env["IOSAPPID"]}',
+    messagingSenderId: '${dotenv.env["MESSAGINGSENDERID"]}',
+    projectId: '${dotenv.env["PROJECTID"]}',
+    storageBucket: '${dotenv.env["STORAGEBUCKET"]}',
+    iosBundleId: '${dotenv.env["IOSIOSBUNDLEID"]}',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAa0osZuXeqqeL7rh3ngpLv9xqrmU3Lf6Q',
-    appId: '1:755090540780:ios:f1092cfb4aadee74e9fdc9',
-    messagingSenderId: '755090540780',
-    projectId: 'newprogress-financr',
-    storageBucket: 'newprogress-financr.appspot.com',
-    iosBundleId: 'com.example.npFinancr.RunnerTests',
+  static FirebaseOptions macos = FirebaseOptions(
+    apiKey: '${dotenv.env["IOSAPIKEY"]}',
+    appId: '${dotenv.env["IOSAPPID"]}',
+    messagingSenderId: '${dotenv.env["MESSAGINGSENDERID"]}',
+    projectId: '${dotenv.env["PROJECTID"]}',
+    storageBucket: '${dotenv.env["STORAGEBUCKET"]}',
+    iosBundleId: '${dotenv.env["IOSIOSBUNDLEID"]}',
   );
 }
